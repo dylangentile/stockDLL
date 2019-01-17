@@ -12,7 +12,7 @@ CFLAGS = -Wall -g -pipe
 
 # define any directories containing header files other than /usr/include
 #
-INCLUDES = -I../chess
+INCLUDES = -I../include
 #-I../include
 
 # define library paths in addition to /usr/lib
@@ -28,7 +28,7 @@ LIBS =
 #-lmylib -lm
 
 # define the C source files
-SRCS = main.cpp board.cpp
+SRCS = main.cpp 
 # define the C object files 
 #
 # This uses Suffix Replacement within a macro:
@@ -40,7 +40,7 @@ SRCS = main.cpp board.cpp
 OBJS = $(SRCS:.c=.o)
 
 # define the executable file 
-MAIN = chess
+MAIN = stock
 
 #
 # The following part of the makefile is generic; it can be used to 

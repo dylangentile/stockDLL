@@ -1,11 +1,21 @@
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <string>
 
+#include <iostream>
+#include <cstdlib>     // srand, rand 
+#include <ctime>       // time 
+#include <string>
 using namespace std;
 
-int main(int argc, char const *argv[])
+string retPlusMinus(int x) {
+	if (x > 0) {
+		return "+";// + tostring(x);
+	}
+	else {
+		return x;
+	}
+}
+
+
+int main(int argc, char **argv[])
 {
 	int stockMax = 8;
 	int *values = new int[stockMax];
@@ -39,4 +49,9 @@ int main(int argc, char const *argv[])
 		}
 	}
 	return 0;
+
+
 }
+
+
+
