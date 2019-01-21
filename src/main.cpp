@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 
 using namespace std;
 
@@ -85,6 +86,10 @@ Game::cycle(){
 }
 
 
+void
+Game::save(){
+
+}
 
 
 void noGui(Game *mygame){
@@ -95,7 +100,7 @@ void noGui(Game *mygame){
 			break;
 		}
 		if(input == "qs"){
-			mygame->save;
+		  mygame->save();
 			break;
 		}
 		while(true){
@@ -128,11 +133,15 @@ void noGui(Game *mygame){
 
 
 string retplumin(int x) {
-	if (x < 0) {
-		return to_string(x);
+  string str;
+  stringstream ss;
+  ss << x;
+  str = ss.str();
+  if (x < 0) {
+    return str;
 	}
 	if (x > 0) {
-		return "+" + to_string(x);
+	  return "+" + str;
 
 	}
 	if (x == 0) {
@@ -227,7 +236,7 @@ int main(int argc, char const *argv[])
 	if(gui){
 		withUI(thegame);
 	} else{
-		noGui();
+		noGui(thegame);
 	}
 	return 0;
 }

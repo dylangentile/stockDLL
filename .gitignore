@@ -3,6 +3,7 @@
 *.app
 *.o
 
+builds/
 
 # Windows thumbnail cache files
 Thumbs.db
