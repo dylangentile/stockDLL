@@ -1,9 +1,131 @@
+#include <string>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <string>
 
 using namespace std;
+
+class Game
+{
+public:
+	Game();
+	~Game();
+	void init(int x, int y, bool mode);
+	bool buy(int which, int howmany);
+	bool sell(int which, int howmany);
+	void save();
+	void cycle();
+
+public:
+	int numofStocks;
+	int cash;
+	int *values;
+	int *newMods;
+	int *own;
+
+	bool saveMode; //true saves locally, false returns all of the values as a long string
+
+};
+
+Game::Game(){
+
+}
+Game::~Game(){
+
+}
+
+void
+Game::init(int x, int y, bool mode){
+	saveMode = mode;
+	numofStocks = x;
+	cash = y;
+	values = new int[numofStocks];
+	newMods = new int[numofStocks];
+	own = new int[numofStocks];
+	for (int i = 0; i < numofStocks; i++) {
+		values[i] = rand() % 1000;
+		newMods[i] = values[i];
+		own[i] = 0;
+	}
+}
+bool
+Game::buy(int which, int howmany){
+	if((values[which]*howmany) <= cash){
+		cash -= values[which]*howmany;
+		own[which] = howmany;
+		return true;
+	} 
+	return false;
+}
+bool
+Game::sell(int which, int howmany){
+	if(own[which] >= howmany){
+		cash += values[which]*howmany;
+		own[which] -= howmany;
+		return true;
+	}
+	return false;
+}
+void
+Game::cycle(){
+	for (int i = 0; i < numofStocks; i++) {
+		int chance = rand() % 2;
+		if (chance == 1) {
+			newMods[i] = (rand() % 100)*(-1);
+		}
+		if (chance == 0) {
+			newMods[i] = rand() % 100;
+		}
+	}
+
+	for(int i = 0; i < numofStocks; i++){
+		values[i] += newMods[i];
+	}
+
+}
+
+
+
+
+void noGui(Game *mygame){
+	while(true){
+		string input;
+		cin >> input;
+		if(input == "qds" || input == "q"){
+			break;
+		}
+		if(input == "qs"){
+			mygame->save;
+			break;
+		}
+		while(true){
+			if(input == "d"){
+				mygame->cycle();
+				break;
+			}
+			int idtobuy = input[0] - '0';
+			int howmany = input[2] - '0';
+			if (input[3] == '-' && input[1] == ':') {
+				//selling function
+				if(!mygame->sell(idtobuy, howmany))
+				{
+					cout << "!";
+				}
+				
+			}
+			else if (input[1] == ':') {
+				if(!mygame->buy(idtobuy, howmany)){
+					cout << "!";
+				}
+			}
+			else {
+				cout << "!";
+			}
+
+		}
+	}
+}
+
 
 string retplumin(int x) {
 	if (x < 0) {
@@ -20,31 +142,18 @@ string retplumin(int x) {
 }
 
 
-int main(int argc, char const *argv[])
-{
-	
-	int stockMax = 8;
-	double cash = 1000;
-	int *values = new int[stockMax];
-	int *newMods = new int[stockMax];
-	int *own = new int[stockMax];
-	srand(time(NULL));
-	for (int i = 0; i < stockMax; i++) {
-		values[i] = rand() % 1000;
-		newMods[i] = values[i];
-		own[i] = 0;
-	}
-	cout << "\nWelcome to stock game!\n";
-	cout << "CASH: $" << cash << "\n";
 
-	while (true) {
+void withUI(Game *mygame){
+cout << "\nWelcome to stock game!\n";
+cout << "CASH: $" << mygame->cash << "\n";
+while (true) {
 		string input;
 		
-		cout << "GlarCorp\tMixeCorp\tSnowCorp\tJoesCorp\n0:$" << values[0] << "\t\t$1:" << values[1] << "\t\t$2:" << values[2] << "\t\t$3:" << values[3] << "\n";
-		cout << "MarkCorp\tJohnCorp\tListCorp\tCodeCorp\n4:$" << values[4] << "\t\t$5:" << values[5] << "\t\t$6:" << values[6] << "\t\t$7:" << values[7] << "\n\n\n";
+		cout << "GlarCorp\tMixeCorp\tSnowCorp\tJoesCorp\n0:$" << mygame->values[0] << "\t\t$1:" << mygame->values[1] << "\t\t$2:" << mygame->values[2] << "\t\t$3:" << mygame->values[3] << "\n";
+		cout << "MarkCorp\tJohnCorp\tListCorp\tCodeCorp\n4:$" << mygame->values[4] << "\t\t$5:" << mygame->values[5] << "\t\t$6:" << mygame->values[6] << "\t\t$7:" << mygame->values[7] << "\n\n\n";
 		
 		while (true) {
-			cout << "\tCASH: $" << cash << "\n";
+			cout << "\tCASH: $" << mygame->cash << "\n";
 			cin >> input;
 			if (input == "d") {
 				break;
@@ -56,29 +165,23 @@ int main(int argc, char const *argv[])
 			//cout << idtobuy;
 			//cout << howmany;
 			
-			if (input[3] == '-') {
+			if (input[3] == '-' && input[1] == ':') {
 				//selling function
-				if (own[idtobuy] >= howmany) {
-					own[idtobuy] -= howmany;
-					cash += values[idtobuy] * howmany;
+				if(mygame->sell(idtobuy, howmany))
+				{
+					cout << "\nTransaction Completed\n";
+				} 
+				else
+				{
+					cout << "\nYour transaction was somehow invalid?\n";
 				}
+				
 			}
 			else if (input[1] == ':') {
-				//buying function
-				if (idtobuy >= 0 && idtobuy <= 8) {
-					int cost = values[idtobuy] * (howmany);
-					if ((double)cost < cash) {
-						own[idtobuy] += howmany;
-						cash = cash - cost;
-						cout << "\nTransaction Completed. Type 'd' to move to the next day.\nNext Transaction:";
-					}
-					else {
-						cout << "\nYou're too poor!\n";
-					}
-
-				}
-				else {
-					cout << "\nWhat you're trying to buy doesn't exist!\n";
+				if(mygame->buy(idtobuy, howmany)){
+					cout << "\nTransaction Completed\n";
+				} else{
+					cout << "\nYour transaction was somehow invalid?\n";
 				}
 			}
 			else {
@@ -87,31 +190,44 @@ int main(int argc, char const *argv[])
 			
 		}
 
-		for (int i = 0; i < stockMax; i++) {
-			int chance = rand() % 2;
-			if (chance == 1) {
-				newMods[i] = (rand() % 100)*(-1);
-			}
-			if (chance == 0) {
-				newMods[i] = rand() % 100;
-			}
-		}
-		for (int i = 0; i < stockMax; i++) {
-			cout << i << ":" << retplumin(newMods[i]) << "\t";
+		mygame->cycle();
+		
+		for (int i = 0; i < mygame->numofStocks; i++) {
+			cout << i << ":" << retplumin(mygame->newMods[i]) << "\t";
 		}
 		cout << '\n';
 		cin >> input;
-		for (int i = 0; i < stockMax; i++) {
-			values[i] += newMods[i];
-		}
+		
 		cout << "\n\n";
-		cout << "CASH: $" << cash << "\nWorth: ";
+		cout << "CASH: $" << mygame->cash << "\nWorth: ";
 		int wt = 0;
-		for (int i = 0; i < stockMax; i++) {
-			wt += values[i] * own[i];
-			cout << i << ':' << own[i] << " + ";
+		for (int i = 0; i < mygame->numofStocks; i++) {
+			wt += mygame->values[i] * mygame->own[i];
+			cout << i << ':' << mygame->own[i] << " + ";
 		}
 		cout << "0 = $" << wt << "\n";
+	}
+}
+
+
+
+
+int main(int argc, char const *argv[])
+{
+	bool gui = true;
+	srand(time(NULL));
+	if(argc == 2){
+		//if(argv[0] == '-')
+		{
+			gui = false;
+		}
+	}
+	Game *thegame = new Game;
+	thegame->init(8,1000,false);
+	if(gui){
+		withUI(thegame);
+	} else{
+		noGui();
 	}
 	return 0;
 }
