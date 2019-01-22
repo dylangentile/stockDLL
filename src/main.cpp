@@ -265,7 +265,7 @@ int main(int argc, char const *argv[])
 	if (argc == 3) {
 		if (strcmp(argv[0], "i")) {
 			string data = argv[0];
-			if (data[0] == "!") {
+			if (data[0] == '!') {
 				//thegame->interpret(data);
 			}
 		}
