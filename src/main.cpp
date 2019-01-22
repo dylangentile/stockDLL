@@ -16,6 +16,7 @@ public:
 	bool sell(int which, int howmany);
 	void save();
 	void cycle();
+	void interpret(string data);
 
 public:
 	int numofStocks;
@@ -143,8 +144,9 @@ Game::interpret(string data) //string format is: Declarinput(!) How Many stocks 
 
 	if (data[0] == '!') {
 		string stockNumTmp;
+		int i = 0;
 		while (data[i] != '|') {
-
+			i++;
 		}
 	}
 	
