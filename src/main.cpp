@@ -88,7 +88,11 @@ Game::cycle(){
 
 void
 Game::save(){
-
+	cout << numofStocks << "|";
+	for(int i = 0; i < numofStocks; i++){
+		cout << i << ":" << values[i] << ":" << own[i] << "|";
+	}
+	cout << "E\n";
 }
 
 
@@ -153,7 +157,7 @@ string retplumin(int x) {
 
 
 void withUI(Game *mygame){
-cout << "\nWelcome to stock game!\n";
+cout << "Welcome to stock game!\n";
 cout << "CASH: $" << mygame->cash << "\n";
 while (true) {
 		string input;
@@ -219,21 +223,29 @@ while (true) {
 }
 
 
-
+#include <cstring>
 
 int main(int argc, char const *argv[])
 {
+
 	bool gui = true;
 	srand(time(NULL));
 	if(argc == 2){
-		//if(argv[0] == '-')
+		if(strcmp(argv[0], "ng"))
 		{
 			gui = false;
 		}
 	}
+	
 	Game *thegame = new Game;
 	thegame->init(8,1000,false);
-	if(gui){
+	if(argc == 2){
+		if(strcmp(argv[0], "io"))
+		{
+			thegame->save();
+		}
+	}
+	else if(gui){
 		withUI(thegame);
 	} else{
 		noGui(thegame);
