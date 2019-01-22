@@ -87,8 +87,9 @@ Game::cycle(){
 
 
 void
-Game::save(){
-	cout << numofStocks << "|";
+Game::save() //format is How Many stocks  | how much cash |StockID:StockValue:HowManyIOwn| ie 8|1000|0:769:0|1:765:0|2:212:0|3:973:0|4:165:0|5:824:0|6:249:0|7:208:0|E
+{
+	cout << numofStocks << "|" << cash << "|";
 	for(int i = 0; i < numofStocks; i++){
 		cout << i << ":" << values[i] << ":" << own[i] << "|";
 	}
@@ -96,7 +97,8 @@ Game::save(){
 }
 
 
-void noGui(Game *mygame){
+void 
+noGui(Game *mygame){
 	while(true){
 		string input;
 		cin >> input;
@@ -134,6 +136,20 @@ void noGui(Game *mygame){
 		}
 	}
 }
+
+void
+Game::interpret(string data) //string format is: Declarinput(!) How Many stocks | how much cash |StockID:StockValue:HowManyIOwn| ... |Transactions(T)|StockID:HowManyIwant|...      ie !8|1000|0:769:0|1:765:0|2:212:0|3:973:0|4:165:0|5:824:0|6:249:0|7:208:0|T|1|0:1|E
+{  //it doesn't matter if the actions in the string are legal. It's all the job of this program to determine that and tell php/jQuery
+
+	if (data[0] == "!") {
+		string stockNumTmp;
+		while (data[i] != "|") {
+
+		}
+	}
+	
+}
+
 
 
 string retplumin(int x) {
@@ -227,7 +243,7 @@ while (true) {
 
 int main(int argc, char const *argv[])
 {
-
+	bool api = false;
 	bool gui = true;
 	srand(time(NULL));
 	if(argc == 2){
@@ -240,15 +256,29 @@ int main(int argc, char const *argv[])
 	Game *thegame = new Game;
 	thegame->init(8,1000,false);
 	if(argc == 2){
-		if(strcmp(argv[0], "io"))
+		if(strcmp(argv[0], "ioi"))
 		{
 			thegame->save();
 		}
 	}
-	else if(gui){
-		withUI(thegame);
-	} else{
-		noGui(thegame);
+
+	if (argc == 3) {
+		if (strcmp(argv[0], "i")) {
+			string data = argv[0];
+			if (data[0] == "!") {
+				thegame->interpret(data);
+			}
+		}
+	}
+
+
+	if (!api) {
+		if (gui) {
+			withUI(thegame);
+		}
+		else {
+			noGui(thegame);
+		}
 	}
 	return 0;
 }
