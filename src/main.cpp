@@ -141,9 +141,9 @@ void
 Game::interpret(string data) //string format is: Declarinput(!) How Many stocks | how much cash |StockID:StockValue:HowManyIOwn| ... |Transactions(T)|StockID:HowManyIwant|...      ie !8|1000|0:769:0|1:765:0|2:212:0|3:973:0|4:165:0|5:824:0|6:249:0|7:208:0|T|1|0:1|E
 {  //it doesn't matter if the actions in the string are legal. It's all the job of this program to determine that and tell php/jQuery
 
-	if (data[0] == "!") {
+	if (data[0] == '!') {
 		string stockNumTmp;
-		while (data[i] != "|") {
+		while (data[i] != '|') {
 
 		}
 	}
