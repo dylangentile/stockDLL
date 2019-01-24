@@ -28,7 +28,7 @@ LIBS =
 #-lmylib -lm
 
 # define the C source files
-SRCS = main.cpp 
+SRCS = main.cpp game.cpp stock.cpp
 # define the C object files 
 #
 # This uses Suffix Replacement within a macro:
